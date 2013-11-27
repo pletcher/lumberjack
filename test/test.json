@@ -1,0 +1,34 @@
+{ 
+  "root": {
+    "some": "property",
+    "another": [
+      "array",
+      "of",
+      "things"
+    ],
+    "id": 1,
+    "children": {
+      "a": {
+        "some": "property",
+        "another": [
+          "array",
+          "of",
+          "more",
+          "things"
+        ],
+        "id": 2
+      },
+      "b": {
+        "some": "property",
+        "another": [
+          "array",
+          "of",
+          "even",
+          "more",
+          "things"
+        ],
+        "id": 3
+      }
+    }
+  }
+}

@@ -1,0 +1,29 @@
+{
+  "name": "Lumberjack",
+  "version": "0.1.0",
+  "description": "a library for dealing with trees",
+  "main": "index.js",
+  "scripts": {
+    "test": "test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:Pletcher/Lumberjack.git"
+  },
+  "devDependencies": {
+    "mocha": "1.14.x",
+    "chai": "1.8.x"
+  },
+  "keywords": [
+    "tree",
+    "trie",
+    "graph",
+    "bfs",
+    "dfs"
+  ],
+  "author": "Charles Pletcher",
+  "license": "BSD",
+  "bugs": {
+    "url": "https://github.com/Pletcher/Lumberjack/issues"
+  }
+}
