@@ -66,15 +66,15 @@ var lumberjack = new Lumberjack({ rememberPath: true });
 
 lumberjack.breadthFirst(tree.root, { id: 3 }, function(err, node, path) {
   console.log(path); // [ { name: 'Jake', id: 1, children: { b: [Object], d: [Object] } },
-                          { name: 'Todd', id: 2, children: { c: [Object] } },
-                          { name: 'Tricia', id: 4 },
-                          { name: 'Mary', id: 3 } ]
+                     //   { name: 'Todd', id: 2, children: { c: [Object] } },
+                     //   { name: 'Tricia', id: 4 },
+                     //   { name: 'Mary', id: 3 } ]
 });
 
 lumberjack.depthFirst(tree.root, { id: 3 }, function(err, node, path) {
   console.log(path); // [ { name: 'Jake', id: 1, children: { b: [Object], d: [Object] } },
-                          { name: 'Todd', id: 2, children: { c: [Object] } },
-                          { name: 'Mary', id: 3 } ]
+                     //   { name: 'Todd', id: 2, children: { c: [Object] } },
+                     //   { name: 'Mary', id: 3 } ]
 })
 ```
 
