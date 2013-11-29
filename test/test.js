@@ -24,6 +24,7 @@ describe('Lumberjack', function() {
     describe('options', function() {
       it('initialize with defaults', function(done) {
         expect(l.options.children).to.equal('children');
+        expect(l.options.rememberPath).to.be.false;
         done();
       });
     });
@@ -80,16 +81,16 @@ describe('Lumberjack', function() {
       });
     });
 
-    describe('search', function() {
+    describe('breadthFirst', function() {
       it('returns an error if query is malformed', function(done) {
-        l.search(l.tree.root, 3, function(err, node) {
+        l.breadthFirst(l.tree.root, 3, function(err, node) {
           expect(err).to.eql(new Error('Query must be of the form { key: value[, key2: value2, etc.] }'));
           done();
         });
       });
 
       it('finds the right node', function(done) {
-        l.search(l.tree.root, { id: 1 }, function(err, node) {
+        l.breadthFirst(l.tree.root, { id: 1 }, function(err, node) {
           expect(err).to.not.exist;
           expect(node).to.eql({
             "some": "property",
@@ -128,7 +129,7 @@ describe('Lumberjack', function() {
       });
 
       it('allows options overrides', function(done) {
-        l.search(l.tree.root, { id: 2 }, { depthFirst: true }, function(err, node) {
+        l.breadthFirst(l.tree.root, { id: 2 }, { depthFirst: true }, function(err, node) {
           expect(err).to.not.exist;
           expect(node).to.eql({
             "some": "property",
@@ -144,8 +145,16 @@ describe('Lumberjack', function() {
         });
       });
 
+      it('does not return the traversal path by default', function(done) {
+        l.breadthFirst(l.tree.root, { id: 2 }, function(err, node, path) {
+          expect(err).to.not.exist;
+          expect(path).to.not.exist;
+          done();
+        });
+      });
+
       it('returns undefined if no node found', function(done) {
-        l.search(l.tree.root, { id: 4 }, function(err, node) {
+        l.breadthFirst(l.tree.root, { id: 4 }, function(err, node) {
           expect(err).to.not.exist;
           expect(node).to.be.undefined;
           done();
@@ -153,47 +162,11 @@ describe('Lumberjack', function() {
       });
     });
 
-    describe('bfs', function() {
+    describe('depthFirst', function() {
       it('returns an error if query is malformed', function(done) {
-        l.bfs(l.tree.root, 3, function(err, node) {
+        l.depthFirst(l.tree.root, 'adfadf', function(err, node) {
           expect(err).to.eql(new Error('Query must be of the form { key: value[, key2: value2, etc.] }'));
           done();
-        });
-      });
-    });
-
-    describe('dfs', function() {
-      it('returns an error if query is malformed', function(done) {
-        l.dfs(l.tree.root, 'adfadf', function(err, node) {
-          expect(err).to.eql(new Error('Query must be of the form { key: value[, key2: value2, etc.] }'));
-          done();
-        });
-      });
-    });
-
-    describe('recursiveDfs', function() {
-      it('returns an error if query is malformed', function(done) {
-        l.recursiveDfs(l.tree.root, 3, function(err, node) {
-          expect(err).to.eql(new Error('Query must be of the form { key: value[, key2: value2, etc.] }'));
-          done();
-        });
-      });
-
-      it('finds the right node', function(done) {
-        l.recursiveDfs(l.tree.root, { id: 3 }, function(err, node) {
-          expect(err).to.not.exist;
-          expect(node).to.eql({
-            "some": "property",
-            "another": [
-              "array",
-              "of",
-              "even",
-              "more",
-              "things"
-            ],
-            "id": 3
-          });
-          done();        
         });
       });
     });
@@ -212,15 +185,82 @@ describe('Lumberjack', function() {
     });
 
     describe('options', function() {
-      it('allow overrides', function(done) {
+      it('children', function(done) {
         expect(l.options.children).to.equal('kids');
         done();
       });
+
+      describe('rememberPath', function() {
+        it('returns the traversal path if requested', function(done) {
+          var _rememberPath = l.options.rememberPath;
+          l.options.rememberPath = true;
+          l.breadthFirst(l.tree.root, { id: 3 }, function(err, node, path) {
+            expect(path.length).to.equal(3);
+            expect(path).to.eql([
+              {
+                "some": "property",
+                "another": [
+                  "array",
+                  "of",
+                  "things"
+                ],
+                "id": 1,
+                "kids": {
+                  "a": {
+                    "some": "property",
+                    "another": [
+                      "array",
+                      "of",
+                      "more",
+                      "things"
+                    ],
+                    "id": 2
+                  },
+                  "b": {
+                    "some": "property",
+                    "another": [
+                      "array",
+                      "of",
+                      "even",
+                      "more",
+                      "things"
+                    ],
+                    "id": 3
+                  }
+                }
+              },
+              {
+                "some": "property",
+                "another": [
+                  "array",
+                  "of",
+                  "more",
+                  "things"
+                ],
+                "id": 2
+              },
+              {
+                "some": "property",
+                "another": [
+                  "array",
+                  "of",
+                  "even",
+                  "more",
+                  "things"
+                ],
+                "id": 3
+              }
+            ]);
+            l.options.rememberPath = _rememberPath;
+            done();
+          });
+        });
+      });
     });
 
-    describe('bfs', function() {
+    describe('breadthFirst', function() {
       it('finds the right node with custom children', function(done) {
-        l.bfs(l.tree.root, { id: 3 }, function(err, node) {
+        l.breadthFirst(l.tree.root, { id: 3 }, function(err, node) {
           expect(err).to.not.exist;
           expect(node).to.eql({
             "some": "property",
@@ -238,9 +278,9 @@ describe('Lumberjack', function() {
       });
     });
 
-    describe('dfs', function() {
+    describe('depthFirst', function() {
       it('finds the right node with custom children', function(done) {
-        l.dfs(l.tree.root, { id: 3 }, function(err, node) {
+        l.depthFirst(l.tree.root, { id: 3 }, function(err, node) {
           expect(err).to.not.exist;
           expect(node).to.eql({
             "some": "property",
