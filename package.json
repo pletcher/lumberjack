@@ -4,7 +4,7 @@
   "description": "a library for dealing with trees",
   "main": "index.js",
   "scripts": {
-    "test": "test"
+    "test": "make test"
   },
   "repository": {
     "type": "git",
@@ -12,7 +12,8 @@
   },
   "devDependencies": {
     "mocha": "1.14.x",
-    "chai": "1.8.x"
+    "chai": "1.8.x",
+    "istanbul": "0.1.45"
   },
   "keywords": [
     "tree",
@@ -25,5 +26,9 @@
   "license": "BSD",
   "bugs": {
     "url": "https://github.com/Pletcher/Lumberjack/issues"
+  },
+  "dependencies": {
+    "underscore": "1.5.2",
+    "fifo": "0.2.0"
   }
 }

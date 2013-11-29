@@ -3,6 +3,12 @@ var chai = require('chai'),
     Lumberjack = require('../index');
 
 describe('Lumberjack', function() {
+  it('creates a new instance even when called without new', function(done) {
+    var l = Lumberjack();
+    expect(l).to.be.an.instanceof(Lumberjack);
+    done();
+  });
+
   describe('default', function() {
     var l;
     
@@ -62,35 +68,84 @@ describe('Lumberjack', function() {
       });
     });
 
-    describe('bfs', function() {
+    describe('find', function() {
+      it('returns false if no node found', function(done) {
+        expect(l.find({ id: 1}, { id: 2 })).to.be.false;
+        done();
+      });
+
+      it('returns true if a node is found', function(done) {
+        expect(l.find({ id: 1}, { id: 1 })).to.be.true;
+        done();
+      });
+    });
+
+    describe('search', function() {
+      it('returns an error if query is malformed', function(done) {
+        l.search(l.tree.root, 3, function(err, node) {
+          expect(err).to.eql(new Error('Query must be of the form { key: value[, key2: value2, etc.] }'));
+          done();
+        });
+      });
+
       it('finds the right node', function(done) {
-        l.bfs(l.tree.root, { 'id': 3 }, function(err, node) {
+        l.search(l.tree.root, { id: 1 }, function(err, node) {
           expect(err).to.not.exist;
           expect(node).to.eql({
             "some": "property",
             "another": [
               "array",
               "of",
-              "even",
-              "more",
               "things"
             ],
-            "id": 3
+            "id": 1,
+            "children": {
+              "a": {
+                "some": "property",
+                "another": [
+                  "array",
+                  "of",
+                  "more",
+                  "things"
+                ],
+                "id": 2
+              },
+              "b": {
+                "some": "property",
+                "another": [
+                  "array",
+                  "of",
+                  "even",
+                  "more",
+                  "things"
+                ],
+                "id": 3
+              }
+            }
           });
           done();
         });
       });
 
-      it('returns undefined if node is not found', function(done) {
-        l.bfs(l.tree.root, { 'id': 4 }, function(err, node) {
+      it('allows options overrides', function(done) {
+        l.search(l.tree.root, { id: 2 }, { depthFirst: true }, function(err, node) {
           expect(err).to.not.exist;
-          expect(node).to.be.undefined;
+          expect(node).to.eql({
+            "some": "property",
+            "another": [
+              "array",
+              "of",
+              "more",
+              "things"
+            ],
+            "id": 2
+          });
           done();
         });
       });
 
-      it('returns undefined with bad query', function(done) {
-        l.bfs(l.tree.root, { 'non-': 'existent' }, function(err, node) {
+      it('returns undefined if no node found', function(done) {
+        l.search(l.tree.root, { id: 4 }, function(err, node) {
           expect(err).to.not.exist;
           expect(node).to.be.undefined;
           done();
@@ -98,9 +153,34 @@ describe('Lumberjack', function() {
       });
     });
 
+    describe('bfs', function() {
+      it('returns an error if query is malformed', function(done) {
+        l.bfs(l.tree.root, 3, function(err, node) {
+          expect(err).to.eql(new Error('Query must be of the form { key: value[, key2: value2, etc.] }'));
+          done();
+        });
+      });
+    });
+
     describe('dfs', function() {
+      it('returns an error if query is malformed', function(done) {
+        l.dfs(l.tree.root, 'adfadf', function(err, node) {
+          expect(err).to.eql(new Error('Query must be of the form { key: value[, key2: value2, etc.] }'));
+          done();
+        });
+      });
+    });
+
+    describe('recursiveDfs', function() {
+      it('returns an error if query is malformed', function(done) {
+        l.recursiveDfs(l.tree.root, 3, function(err, node) {
+          expect(err).to.eql(new Error('Query must be of the form { key: value[, key2: value2, etc.] }'));
+          done();
+        });
+      });
+
       it('finds the right node', function(done) {
-        l.dfs(l.tree.root, { 'id': 3 }, function(err, node) {
+        l.recursiveDfs(l.tree.root, { id: 3 }, function(err, node) {
           expect(err).to.not.exist;
           expect(node).to.eql({
             "some": "property",
@@ -140,7 +220,7 @@ describe('Lumberjack', function() {
 
     describe('bfs', function() {
       it('finds the right node with custom children', function(done) {
-        l.bfs(l.tree.root, { 'id': 3 }, function(err, node) {
+        l.bfs(l.tree.root, { id: 3 }, function(err, node) {
           expect(err).to.not.exist;
           expect(node).to.eql({
             "some": "property",
@@ -160,7 +240,7 @@ describe('Lumberjack', function() {
 
     describe('dfs', function() {
       it('finds the right node with custom children', function(done) {
-        l.dfs(l.tree.root, { 'id': 3 }, function(err, node) {
+        l.dfs(l.tree.root, { id: 3 }, function(err, node) {
           expect(err).to.not.exist;
           expect(node).to.eql({
             "some": "property",

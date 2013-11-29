@@ -53,5 +53,5 @@ lumberjack.dfs(tree.root, { id: 4 }, function(err, node) {
 
 ```
 cd [lumberjack_root_directory]
-mocha test
+make test
 ```
