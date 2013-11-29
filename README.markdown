@@ -60,6 +60,7 @@ lumberjack.depthFirst(tree.root, { id: 4 }, function(err, node) {
 
 #### Options
 children (String; default: 'children'): The name of subnodes in your tree
+
 rememberPath (Boolean; default: false): Instructs the Lumberjack instance to return its traversal path for your search. If true, provider your callback with a third parameter:
 ```javascript
 var lumberjack = new Lumberjack({ rememberPath: true });
