@@ -1,10 +1,10 @@
 Lumberjack
----
+===
 
 ### A library for working with trees (and maybe eventually tries).
 
 API
-===
+---
 
 #### General Usage
 
@@ -14,7 +14,8 @@ var tree = {
   root: {
     name: 'Jake',
     id: 1,
-    children: { // by default, Lumberjack looks for a 'children' property; you can override this in the options hash
+    children: { // by default, Lumberjack looks for a 'children' property;
+                // you can override this in the options hash
       b: {
         name: 'Todd',
         id: 2,
@@ -59,7 +60,7 @@ lumberjack.dfs(tree.root, { id: 4 }, function(err, node) {
 Additional functionality, including graph comparison, is planned.
 
 Tests
-===
+---
 
 ```
 cd [lumberjack_root_directory]
