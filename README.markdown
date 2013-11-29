@@ -62,22 +62,23 @@ lumberjack.depthFirst(tree.root, { id: 4 }, function(err, node) {
 - children (String; default: 'children'): The name of subnodes in your tree
 
 - rememberPath (Boolean; default: false): Instructs the Lumberjack instance to return its traversal path for your search. If true, provider your callback with a third parameter:
-```javascript
-var lumberjack = new Lumberjack({ rememberPath: true });
 
-lumberjack.breadthFirst(tree.root, { id: 3 }, function(err, node, path) {
-  console.log(path); // [ { name: 'Jake', id: 1, children: { b: [Object], d: [Object] } },
-                     //   { name: 'Todd', id: 2, children: { c: [Object] } },
-                     //   { name: 'Tricia', id: 4 },
-                     //   { name: 'Mary', id: 3 } ]
-});
+    ```javascript
+    var lumberjack = new Lumberjack({ rememberPath: true });
 
-lumberjack.depthFirst(tree.root, { id: 3 }, function(err, node, path) {
-  console.log(path); // [ { name: 'Jake', id: 1, children: { b: [Object], d: [Object] } },
-                     //   { name: 'Todd', id: 2, children: { c: [Object] } },
-                     //   { name: 'Mary', id: 3 } ]
-})
-```
+    lumberjack.breadthFirst(tree.root, { id: 3 }, function(err, node, path) {
+      console.log(path); // [ { name: 'Jake', id: 1, children: { b: [Object], d: [Object] } },
+                         //   { name: 'Todd', id: 2, children: { c: [Object] } },
+                         //   { name: 'Tricia', id: 4 },
+                         //   { name: 'Mary', id: 3 } ]
+    });
+
+    lumberjack.depthFirst(tree.root, { id: 3 }, function(err, node, path) {
+      console.log(path); // [ { name: 'Jake', id: 1, children: { b: [Object], d: [Object] } },
+                         //   { name: 'Todd', id: 2, children: { c: [Object] } },
+                         //   { name: 'Mary', id: 3 } ]
+    })
+    ```
 
 Additional functionality, including graph comparison, is planned.
 
