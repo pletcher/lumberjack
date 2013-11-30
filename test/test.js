@@ -40,8 +40,8 @@ describe('Lumberjack', function() {
               "things"
             ],
             "id": 1,
-            "children": {
-              "a": {
+            "children": [
+              {
                 "some": "property",
                 "another": [
                   "array",
@@ -49,9 +49,10 @@ describe('Lumberjack', function() {
                   "more",
                   "things"
                 ],
-                "id": 2
+                "id": 2,
+                "children": []
               },
-              "b": {
+              {
                 "some": "property",
                 "another": [
                   "array",
@@ -60,11 +61,30 @@ describe('Lumberjack', function() {
                   "more",
                   "things"
                 ],
-                "id": 3
+                "id": 3,
+                "children": []
               }
-            }
+            ]
           }
         });
+        done();
+      });
+    });
+
+    describe('removeTree', function() {
+      it('removes a tree from the instance', function(done) {
+        var _tree = l.tree;
+        l.removeTree();
+        expect(l.tree).to.be.null;
+        done();
+      });
+    });
+
+    describe('removeFlattenedTree', function() {
+      it('removes a flattened tree from the instance', function(done) {
+        l.flattenedTree = { '1': { name: 'bob', children: [2] }, '2': { name: 'bill' } };
+        l.removeFlattenedTree();
+        expect(l.flattenedTree).to.be.null;
         done();
       });
     });
@@ -100,8 +120,8 @@ describe('Lumberjack', function() {
               "things"
             ],
             "id": 1,
-            "children": {
-              "a": {
+            "children": [
+              {
                 "some": "property",
                 "another": [
                   "array",
@@ -109,9 +129,10 @@ describe('Lumberjack', function() {
                   "more",
                   "things"
                 ],
-                "id": 2
+                "id": 2,
+                "children": []
               },
-              "b": {
+              {
                 "some": "property",
                 "another": [
                   "array",
@@ -120,9 +141,10 @@ describe('Lumberjack', function() {
                   "more",
                   "things"
                 ],
-                "id": 3
+                "id": 3,
+                "children": []
               }
-            }
+            ]
           });
           done();
         });
@@ -139,7 +161,8 @@ describe('Lumberjack', function() {
               "more",
               "things"
             ],
-            "id": 2
+            "id": 2,
+            "children": []
           });
           done();
         });
@@ -164,10 +187,27 @@ describe('Lumberjack', function() {
 
     describe('depthFirst', function() {
       it('returns an error if query is malformed', function(done) {
-        l.depthFirst(l.tree.root, 'adfadf', function(err, node) {
+        l.depthFirst(l.tree.root, 'adfadf', 5, function(err, node) {
           expect(err).to.eql(new Error('Query must be of the form { key: value[, key2: value2, etc.] }'));
           done();
         });
+      });
+    });
+
+    describe('flatten', function() {
+      it('flattens a tree', function(done) {
+        l.flatten(l.tree.root);
+        expect(l.flattenedTree).to.eql(require('./flat_tree.json'));
+        done();
+      });
+    });
+
+    describe('rebuild', function() {
+      it('rebuilds a tree from a flat object', function(done) {
+        l.flattenedTree = require('./flat_tree.json');
+        l.rebuild(l.getNode("1"), { id: 1 });
+        expect(l.tree).to.eql(require('./test.json').root);
+        done();
       });
     });
   });
@@ -214,7 +254,12 @@ describe('Lumberjack', function() {
                       "more",
                       "things"
                     ],
-                    "id": 2
+                    "id": 2,
+                    "kids": {
+                      "c": {
+                        "some": "property"
+                      }
+                    }
                   },
                   "b": {
                     "some": "property",
@@ -237,7 +282,12 @@ describe('Lumberjack', function() {
                   "more",
                   "things"
                 ],
-                "id": 2
+                "id": 2,
+                "kids": {
+                  "c": {
+                    "some": "property"
+                  }
+                }
               },
               {
                 "some": "property",
@@ -280,7 +330,7 @@ describe('Lumberjack', function() {
 
     describe('depthFirst', function() {
       it('finds the right node with custom children', function(done) {
-        l.depthFirst(l.tree.root, { id: 3 }, function(err, node) {
+        l.depthFirst(l.tree.root, { id: 3 }, 3, function(err, node) {
           expect(err).to.not.exist;
           expect(node).to.eql({
             "some": "property",
@@ -294,6 +344,32 @@ describe('Lumberjack', function() {
             "id": 3
           });
           done();        
+        });
+      });
+
+      it('works even with undefined depth', function(done) {
+        l.depthFirst(l.tree.root, { id: 3 }, 3, function(err, node) {
+          expect(err).to.not.exist;
+          expect(node).to.eql({
+            "some": "property",
+            "another": [
+              "array",
+              "of",
+              "even",
+              "more",
+              "things"
+            ],
+            "id": 3
+          });
+          done();        
+        });
+      });
+
+      it('returns undefined if it reaches max depth without finding a node', function(done) {
+        l.depthFirst(l.tree.root, { id: 4 }, 1, [], function(err, node) {
+          expect(err).to.not.exist;
+          expect(node).to.be.undefined;
+          done();
         });
       });
     });

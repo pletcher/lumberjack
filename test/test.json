@@ -7,8 +7,8 @@
       "things"
     ],
     "id": 1,
-    "children": {
-      "a": {
+    "children": [
+      {
         "some": "property",
         "another": [
           "array",
@@ -16,9 +16,10 @@
           "more",
           "things"
         ],
-        "id": 2
+        "id": 2,
+        "children": []
       },
-      "b": {
+      {
         "some": "property",
         "another": [
           "array",
@@ -27,8 +28,9 @@
           "more",
           "things"
         ],
-        "id": 3
+        "id": 3,
+        "children": []
       }
-    }
+    ]
   }
 }

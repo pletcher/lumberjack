@@ -1,0 +1,37 @@
+{
+  "1": {
+    "some": "property",
+    "another": [
+      "array",
+      "of",
+      "things"
+    ],
+    "id": 1,
+    "children": [2, 3]
+  },
+
+  "2": {
+    "some": "property",
+    "another": [
+      "array",
+      "of",
+      "more",
+      "things"
+    ],
+    "id": 2,
+    "children": []
+  },
+
+  "3": {
+    "some": "property",
+    "another": [
+      "array",
+      "of",
+      "even",
+      "more",
+      "things"
+    ],
+    "id": 3,
+    "children": []
+  }
+}

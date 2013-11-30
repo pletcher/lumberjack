@@ -1,7 +1,7 @@
 Lumberjack
 ===
 
-### A library for working with trees (and maybe eventually tries).
+### A library for working with trees.
 
 API
 ---
@@ -45,7 +45,7 @@ lumberjack.setTree(tree);
 You can search breadth-first:
 ```javascript
 // breadth-first search
-lumberjack.breadthFirst(tree.root, { id: 3 }, function(err, node) {
+lumberjack.breadthFirst(lumberjack.tree.root, { id: 3 }, function(err, node) {
   console.log(node); // { name: 'Mary', id: 3 }
 });
 ```
@@ -53,13 +53,43 @@ lumberjack.breadthFirst(tree.root, { id: 3 }, function(err, node) {
 or depth-first:
 ```javascript
 // depth-first search
-lumberjack.depthFirst(tree.root, { id: 4 }, function(err, node) {
+lumberjack.depthFirst(lumberjack.tree.root, { id: 4 }, function(err, node) {
   console.log(node); // { name: 'Tricia', id: 4 }
 });
 ```
 
+You can flatten the tree:
+```javascript
+// flatten
+lumberjack.flatten(lumberjack.tree.root);
+console.log(lumberjack.flattenedTree); // { '1': 
+                                       //    { name: 'Jake',
+                                       //      id: 1,
+                                       //      children: [ 2, 4 ] },
+                                       //   '2': 
+                                       //    { name: 'Todd',
+                                       //      id: 2,
+                                       //      children: [ 3 ] },
+                                       //   '3': { name: 'Mary', id: 3, children: [] },
+                                       //   '4': { name: 'Tricia', id: 4, children: [] } }
+```
+
+And you can rebuild it:
+```javascript
+// rebuild
+lumberjack.rebuild(lumberjack.flattenedTree['1'], { id: 1 });
+console.log(lumberjack.tree); // { name: 'Jake',
+                              //   id: 1,
+                              //   children: 
+                              //   [ { name: 'Todd',
+                              //       id: 2,
+                              //       children: [ { name: 'Mary', id: 3, children: [] } ] },
+                              //     { name: 'Tricia', id: 4, children: [] } ] }
+```
+
 #### Options
 - children (String; default: 'children'): The name of subnodes in your tree
+    - NB: The value of this property can be an object with your own custom indeces or an array; Lumberjack doesn't care
 
 - rememberPath (Boolean; default: false): Instructs the Lumberjack instance to return its traversal path for your search. If true, provider your callback with a third parameter:
 
@@ -79,6 +109,7 @@ lumberjack.depthFirst(tree.root, { id: 4 }, function(err, node) {
                          //   { name: 'Mary', id: 3 } ]
     })
     ```
+
 
 Additional functionality, including graph comparison, is planned.
 

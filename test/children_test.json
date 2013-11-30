@@ -16,7 +16,12 @@
           "more",
           "things"
         ],
-        "id": 2
+        "id": 2,
+        "kids": {
+          "c": {
+            "some": "property"
+          }
+        }
       },
       "b": {
         "some": "property",
