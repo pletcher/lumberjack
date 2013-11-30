@@ -88,12 +88,12 @@ console.log(lumberjack.tree); // { name: 'Jake',
 ```
 
 #### Options
-- children (String; default: 'children'): The name of subnodes in your tree
+- `children` (String; default: 'children'): The name of subnodes in your tree
     - The value of this property can be an object with your own custom indeces or a JavaScript Array; Lumberjack doesn't care
 
-- identifier (String; default: 'id'): The key that uniquely identifies each node in your tree
+- `identifier` (String; default: 'id'): The key that uniquely identifies each node in your tree
 
-- rememberPath (Boolean; default: false): Instructs the Lumberjack instance to return its traversal path for your search. If true, provider your callback with a third parameter:
+- `rememberPath` (Boolean; default: false): Instructs the Lumberjack instance to return its traversal path for your search. If true, provider your callback with a third parameter:
 
     ```javascript
     var lumberjack = new Lumberjack({ rememberPath: true });
