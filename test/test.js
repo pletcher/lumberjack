@@ -1,37 +1,51 @@
 var chai = require('chai'),
     expect = chai.expect,
-    Lumberjack = require('../index');
+    Tree = require('../index').tree,
+    Lumberjack = require('../index').lumberjack;
 
-describe('Lumberjack', function() {
+describe('Tree', function() {
   it('creates a new instance even when called without new', function(done) {
-    var l = Lumberjack();
-    expect(l).to.be.an.instanceof(Lumberjack);
+    var t = Tree(require('./test.json'));
+    expect(t).to.be.defined;
     done();
   });
 
   describe('default', function() {
-    var l;
+    var t;
     
     beforeEach(function() {
-      l = new Lumberjack();
-      l.setTree(require('./test.json'));
+      t = new Tree(require('./test.json'));
     });
 
     afterEach(function() {
-      l = null;
+      t = null;
     });
 
     describe('options', function() {
       it('initialize with defaults', function(done) {
-        expect(l.options.children).to.equal('children');
-        expect(l.options.rememberPath).to.be.false;
+        expect(t.options.flat).to.be.false;
+        expect(t.options.children).to.equal('children');
+        expect(t.options.identifier).to.equal('id');
+        expect(t.options.rememberPath).to.be.false;
+        done();
+      });
+    });
+
+    describe('find', function() {
+      it('returns false if no node found', function(done) {
+        expect(t.find({ id: 1}, { id: 2 })).to.be.false;
+        done();
+      });
+
+      it('returns true if a node is found', function(done) {
+        expect(t.find({ id: 1}, { id: 1 })).to.be.true;
         done();
       });
     });
 
     describe('setTree', function() {
       it('sets a tree on the instance', function(done) {
-        expect(l.tree).to.eql({ 
+        expect(t.tree).to.eql({ 
           "root": {
             "some": "property",
             "another": [
@@ -73,44 +87,31 @@ describe('Lumberjack', function() {
 
     describe('removeTree', function() {
       it('removes a tree from the instance', function(done) {
-        var _tree = l.tree;
-        l.removeTree();
-        expect(l.tree).to.be.null;
+        t.removeTree();
+        expect(t.tree).to.be.null;
         done();
       });
     });
 
     describe('removeFlattenedTree', function() {
       it('removes a flattened tree from the instance', function(done) {
-        l.flattenedTree = { '1': { name: 'bob', children: [2] }, '2': { name: 'bill' } };
-        l.removeFlattenedTree();
-        expect(l.flattenedTree).to.be.null;
-        done();
-      });
-    });
-
-    describe('find', function() {
-      it('returns false if no node found', function(done) {
-        expect(l.find({ id: 1}, { id: 2 })).to.be.false;
-        done();
-      });
-
-      it('returns true if a node is found', function(done) {
-        expect(l.find({ id: 1}, { id: 1 })).to.be.true;
+        t.flattened = { '1': { name: 'bob', children: [2] }, '2': { name: 'bill' } };
+        t.removeFlattenedTree();
+        expect(t.flattened).to.be.null;
         done();
       });
     });
 
     describe('breadthFirst', function() {
       it('returns an error if query is malformed', function(done) {
-        l.breadthFirst(l.tree.root, 3, function(err, node) {
+        t.breadthFirst(t.tree.root, 3, function(err, node) {
           expect(err).to.eql(new Error('Query must be of the form { key: value[, key2: value2, etc.] }'));
           done();
         });
       });
 
       it('finds the right node', function(done) {
-        l.breadthFirst(l.tree.root, { id: 1 }, function(err, node) {
+        t.breadthFirst(t.tree.root, { id: 1 }, function(err, node) {
           expect(err).to.not.exist;
           expect(node).to.eql({
             "some": "property",
@@ -151,7 +152,7 @@ describe('Lumberjack', function() {
       });
 
       it('allows options overrides', function(done) {
-        l.breadthFirst(l.tree.root, { id: 2 }, { depthFirst: true }, function(err, node) {
+        t.breadthFirst(t.tree.root, { id: 2 }, { depthFirst: true }, function(err, node) {
           expect(err).to.not.exist;
           expect(node).to.eql({
             "some": "property",
@@ -169,7 +170,7 @@ describe('Lumberjack', function() {
       });
 
       it('does not return the traversal path by default', function(done) {
-        l.breadthFirst(l.tree.root, { id: 2 }, function(err, node, path) {
+        t.breadthFirst(t.tree.root, { id: 2 }, function(err, node, path) {
           expect(err).to.not.exist;
           expect(path).to.not.exist;
           done();
@@ -177,7 +178,7 @@ describe('Lumberjack', function() {
       });
 
       it('returns undefined if no node found', function(done) {
-        l.breadthFirst(l.tree.root, { id: 4 }, function(err, node) {
+        t.breadthFirst(t.tree.root, { id: 4 }, function(err, node) {
           expect(err).to.not.exist;
           expect(node).to.be.undefined;
           done();
@@ -187,7 +188,7 @@ describe('Lumberjack', function() {
 
     describe('depthFirst', function() {
       it('returns an error if query is malformed', function(done) {
-        l.depthFirst(l.tree.root, 'adfadf', 5, function(err, node) {
+        t.depthFirst(t.tree.root, 'adfadf', 5, function(err, node) {
           expect(err).to.eql(new Error('Query must be of the form { key: value[, key2: value2, etc.] }'));
           done();
         });
@@ -196,45 +197,44 @@ describe('Lumberjack', function() {
 
     describe('flatten', function() {
       it('flattens a tree', function(done) {
-        l.flatten(l.tree.root);
-        expect(l.flattenedTree).to.eql(require('./flat_tree.json'));
+        t.flatten(t.tree.root);
+        expect(t.flattenedTree).to.eql(require('./flat_tree.json'));
         done();
       });
     });
 
     describe('rebuild', function() {
       it('rebuilds a tree from a flat object', function(done) {
-        l.flattenedTree = require('./flat_tree.json');
-        l.rebuild(l.getNode("1"), { id: 1 });
-        expect(l.tree).to.eql(require('./test.json').root);
+        t.flattenedTree = require('./flat_tree.json');
+        t.rebuild(t.getNode("1"), { id: 1 });
+        expect(t.tree).to.eql(require('./test.json').root);
         done();
       });
     });
   });
 
   describe('custom', function() {
-    var l;
+    var t;
     
     beforeEach(function() {
-      l = new Lumberjack({ children: 'kids' });
-      l.setTree(require('./children_test.json'));
+      t = new Tree(require('./children_test.json'), { children: 'kids' });
     });
 
     afterEach(function() {
-      l = null;
+      t = null;
     });
 
     describe('options', function() {
       it('children', function(done) {
-        expect(l.options.children).to.equal('kids');
+        expect(t.options.children).to.equal('kids');
         done();
       });
 
       describe('rememberPath', function() {
         it('returns the traversal path if requested', function(done) {
-          var _rememberPath = l.options.rememberPath;
-          l.options.rememberPath = true;
-          l.breadthFirst(l.tree.root, { id: 3 }, function(err, node, path) {
+          var _rememberPath = t.options.rememberPath;
+          t.options.rememberPath = true;
+          t.breadthFirst(t.tree.root, { id: 3 }, function(err, node, path) {
             expect(path.length).to.equal(3);
             expect(path).to.eql([
               {
@@ -301,7 +301,7 @@ describe('Lumberjack', function() {
                 "id": 3
               }
             ]);
-            l.options.rememberPath = _rememberPath;
+            t.options.rememberPath = _rememberPath;
             done();
           });
         });
@@ -310,7 +310,7 @@ describe('Lumberjack', function() {
 
     describe('breadthFirst', function() {
       it('finds the right node with custom children', function(done) {
-        l.breadthFirst(l.tree.root, { id: 3 }, function(err, node) {
+        t.breadthFirst(t.tree.root, { id: 3 }, function(err, node) {
           expect(err).to.not.exist;
           expect(node).to.eql({
             "some": "property",
@@ -330,7 +330,7 @@ describe('Lumberjack', function() {
 
     describe('depthFirst', function() {
       it('finds the right node with custom children', function(done) {
-        l.depthFirst(l.tree.root, { id: 3 }, 3, function(err, node) {
+        t.depthFirst(t.tree.root, { id: 3 }, 3, function(err, node) {
           expect(err).to.not.exist;
           expect(node).to.eql({
             "some": "property",
@@ -348,7 +348,7 @@ describe('Lumberjack', function() {
       });
 
       it('works even with undefined depth', function(done) {
-        l.depthFirst(l.tree.root, { id: 3 }, 3, function(err, node) {
+        t.depthFirst(t.tree.root, { id: 3 }, 3, function(err, node) {
           expect(err).to.not.exist;
           expect(node).to.eql({
             "some": "property",
@@ -366,7 +366,7 @@ describe('Lumberjack', function() {
       });
 
       it('returns undefined if it reaches max depth without finding a node', function(done) {
-        l.depthFirst(l.tree.root, { id: 4 }, 1, [], function(err, node) {
+        t.depthFirst(t.tree.root, { id: 4 }, 1, [], function(err, node) {
           expect(err).to.not.exist;
           expect(node).to.be.undefined;
           done();

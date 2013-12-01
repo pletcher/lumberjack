@@ -1,6 +1,6 @@
 {
-  "name": "Lumberjack",
-  "version": "0.1.0",
+  "name": "lumberjack-tree",
+  "version": "0.0.1",
   "description": "a library for dealing with trees",
   "main": "index.js",
   "scripts": {

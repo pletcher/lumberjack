@@ -10,7 +10,7 @@ API
 
 Suppose you have a tree:
 ```javascript
-var tree = {
+var someTree = {
   root: {
     name: 'Jake',
     id: 1,
@@ -37,15 +37,14 @@ var tree = {
 
 And suppose you need to find something in that tree:
 ```javascript
-var lumberjack = new Lumberjack(/*options*/);
-
-lumberjack.setTree(tree);
+var Tree = require('lumberjack-tree').tree;
+var tree = new Tree(someTree, /*options*/);
 ```
 
 You can search breadth-first:
 ```javascript
 // breadth-first search
-lumberjack.breadthFirst(lumberjack.tree.root, { id: 3 }, function(err, node) {
+tree.breadthFirst(tree.tree.root, { id: 3 }, function(err, node) {
   console.log(node); // { name: 'Mary', id: 3 }
 });
 ```
@@ -53,7 +52,7 @@ lumberjack.breadthFirst(lumberjack.tree.root, { id: 3 }, function(err, node) {
 or depth-first:
 ```javascript
 // depth-first search
-lumberjack.depthFirst(lumberjack.tree.root, { id: 4 }, function(err, node) {
+tree.depthFirst(tree.tree.root, { id: 4 }, function(err, node) {
   console.log(node); // { name: 'Tricia', id: 4 }
 });
 ```
@@ -61,8 +60,8 @@ lumberjack.depthFirst(lumberjack.tree.root, { id: 4 }, function(err, node) {
 You can flatten the tree:
 ```javascript
 // flatten
-lumberjack.flatten(lumberjack.tree.root);
-console.log(lumberjack.flattenedTree); // { '1': 
+tree.flatten(tree.tree.root);
+console.log(tree.flattened); // { '1': 
                                        //    { name: 'Jake',
                                        //      id: 1,
                                        //      children: [ 2, 4 ] },
@@ -77,8 +76,8 @@ console.log(lumberjack.flattenedTree); // { '1':
 And you can rebuild it:
 ```javascript
 // rebuild
-lumberjack.rebuild(lumberjack.flattenedTree['1'], { id: 1 });
-console.log(lumberjack.tree); // { name: 'Jake',
+tree.rebuild(tree.flattened['1'], { id: 1 });
+console.log(tree.tree); // { name: 'Jake',
                               //   id: 1,
                               //   children: 
                               //   [ { name: 'Todd',
@@ -88,24 +87,26 @@ console.log(lumberjack.tree); // { name: 'Jake',
 ```
 
 #### Options
-- `children` (String; default: 'children'): The name of subnodes in your tree
+- `children` (String; default: `'children'`): The name of subnodes in your tree
     - The value of this property can be an object with your own custom indeces or a JavaScript Array; Lumberjack doesn't care
 
-- `identifier` (String; default: 'id'): The key that uniquely identifies each node in your tree
+- `flat` (Boolean; default: `false`): If you pass a flat tree to the Tree constructor, mark this flag as `true` so the constructor can build the nested tree for you. (It takes as root the 0th item in the Object or Array that it receives.)
 
-- `rememberPath` (Boolean; default: false): Instructs the Lumberjack instance to return its traversal path for your search. If true, provider your callback with a third parameter:
+- `identifier` (String; default: `'id'`): The key that uniquely identifies each node in your tree
+
+- `rememberPath` (Boolean; default: `false`): Instructs the Lumberjack instance to return its traversal path for your search. If true, provider your callback with a third parameter:
 
     ```javascript
-    var lumberjack = new Lumberjack({ rememberPath: true });
+    var tree = new Tree(someTree, { rememberPath: true });
 
-    lumberjack.breadthFirst(tree.root, { id: 3 }, function(err, node, path) {
+    tree.breadthFirst(tree.tree.root, { id: 3 }, function(err, node, path) {
       console.log(path); // [ { name: 'Jake', id: 1, children: { b: [Object], d: [Object] } },
                          //   { name: 'Todd', id: 2, children: { c: [Object] } },
                          //   { name: 'Tricia', id: 4 },
                          //   { name: 'Mary', id: 3 } ]
     });
 
-    lumberjack.depthFirst(tree.root, { id: 3 }, function(err, node, path) {
+    tree.depthFirst(tree.tree.root, { id: 3 }, function(err, node, path) {
       console.log(path); // [ { name: 'Jake', id: 1, children: { b: [Object], d: [Object] } },
                          //   { name: 'Todd', id: 2, children: { c: [Object] } },
                          //   { name: 'Mary', id: 3 } ]
