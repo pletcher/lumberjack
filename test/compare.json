@@ -16,19 +16,13 @@
         "things"
       ],
       "id": 2,
-      "children": []
-    },
-    {
-      "some": "property",
-      "another": [
-        "array",
-        "of",
-        "even",
-        "more",
-        "things"
-      ],
-      "id": 3,
-      "children": []
+      "children": [
+        {
+          "some": "property",
+          "id": 4,
+          "children": []
+        }
+      ]
     }
   ]
 }

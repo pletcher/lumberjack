@@ -1,39 +1,37 @@
 { 
-  "root": {
-    "some": "property",
-    "another": [
-      "array",
-      "of",
-      "things"
-    ],
-    "id": 1,
-    "kids": {
-      "a": {
-        "some": "property",
-        "another": [
-          "array",
-          "of",
-          "more",
-          "things"
-        ],
-        "id": 2,
-        "kids": {
-          "c": {
-            "some": "property"
-          }
+  "some": "property",
+  "another": [
+    "array",
+    "of",
+    "things"
+  ],
+  "id": 1,
+  "kids": {
+    "a": {
+      "some": "property",
+      "another": [
+        "array",
+        "of",
+        "more",
+        "things"
+      ],
+      "id": 2,
+      "kids": {
+        "c": {
+          "some": "property"
         }
-      },
-      "b": {
-        "some": "property",
-        "another": [
-          "array",
-          "of",
-          "even",
-          "more",
-          "things"
-        ],
-        "id": 3
       }
+    },
+    "b": {
+      "some": "property",
+      "another": [
+        "array",
+        "of",
+        "even",
+        "more",
+        "things"
+      ],
+      "id": 3
     }
   }
 }

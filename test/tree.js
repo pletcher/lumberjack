@@ -1,20 +1,19 @@
 var chai = require('chai'),
     expect = chai.expect,
-    Tree = require('../index').tree,
-    Lumberjack = require('../index').lumberjack;
+    Tree = require('../index').Tree;
 
 describe('Tree', function() {
   it('creates a new instance even when called without new', function(done) {
     var t = Tree(require('./test.json'));
-    expect(t).to.be.defined;
+    expect(t).to.be.instanceof(Tree);
     done();
   });
 
   describe('default', function() {
-    var t;
+    var t, testTree = require('./test.json');
     
     beforeEach(function() {
-      t = new Tree(require('./test.json'));
+      t = new Tree(testTree);
     });
 
     afterEach(function() {
@@ -45,41 +44,42 @@ describe('Tree', function() {
 
     describe('setTree', function() {
       it('sets a tree on the instance', function(done) {
+        t.setTree(testTree);
         expect(t.tree).to.eql({ 
-          "root": {
-            "some": "property",
-            "another": [
-              "array",
-              "of",
-              "things"
-            ],
-            "id": 1,
-            "children": [
-              {
-                "some": "property",
-                "another": [
-                  "array",
-                  "of",
-                  "more",
-                  "things"
-                ],
-                "id": 2,
-                "children": []
-              },
-              {
-                "some": "property",
-                "another": [
-                  "array",
-                  "of",
-                  "even",
-                  "more",
-                  "things"
-                ],
-                "id": 3,
-                "children": []
-              }
-            ]
-          }
+          "some": "property",
+          "another": [
+            "array",
+            "of",
+            "things"
+          ],
+          "id": 1,
+          "children": [
+            {
+              "some": "property",
+              "another": [
+                "array",
+                "of",
+                "more",
+                "things"
+              ],
+              "id": 2,
+              "children": [],
+              "parent": 1
+            },
+            {
+              "some": "property",
+              "another": [
+                "array",
+                "of",
+                "even",
+                "more",
+                "things"
+              ],
+              "id": 3,
+              "children": [],
+              "parent": 1
+            }
+          ]
         });
         done();
       });
@@ -104,14 +104,14 @@ describe('Tree', function() {
 
     describe('breadthFirst', function() {
       it('returns an error if query is malformed', function(done) {
-        t.breadthFirst(t.tree.root, 3, function(err, node) {
+        t.breadthFirst(t.tree, 3, function(err, node) {
           expect(err).to.eql(new Error('Query must be of the form { key: value[, key2: value2, etc.] }'));
           done();
         });
       });
 
       it('finds the right node', function(done) {
-        t.breadthFirst(t.tree.root, { id: 1 }, function(err, node) {
+        t.breadthFirst(t.tree, { id: 1 }, function(err, node) {
           expect(err).to.not.exist;
           expect(node).to.eql({
             "some": "property",
@@ -131,7 +131,8 @@ describe('Tree', function() {
                   "things"
                 ],
                 "id": 2,
-                "children": []
+                "children": [],
+                "parent": 1
               },
               {
                 "some": "property",
@@ -143,7 +144,8 @@ describe('Tree', function() {
                   "things"
                 ],
                 "id": 3,
-                "children": []
+                "children": [],
+                "parent": 1
               }
             ]
           });
@@ -151,26 +153,8 @@ describe('Tree', function() {
         });
       });
 
-      it('allows options overrides', function(done) {
-        t.breadthFirst(t.tree.root, { id: 2 }, { depthFirst: true }, function(err, node) {
-          expect(err).to.not.exist;
-          expect(node).to.eql({
-            "some": "property",
-            "another": [
-              "array",
-              "of",
-              "more",
-              "things"
-            ],
-            "id": 2,
-            "children": []
-          });
-          done();
-        });
-      });
-
       it('does not return the traversal path by default', function(done) {
-        t.breadthFirst(t.tree.root, { id: 2 }, function(err, node, path) {
+        t.breadthFirst(t.tree, { id: 2 }, function(err, node, path) {
           expect(err).to.not.exist;
           expect(path).to.not.exist;
           done();
@@ -178,7 +162,7 @@ describe('Tree', function() {
       });
 
       it('returns undefined if no node found', function(done) {
-        t.breadthFirst(t.tree.root, { id: 4 }, function(err, node) {
+        t.breadthFirst(t.tree, { id: 4 }, function(err, node) {
           expect(err).to.not.exist;
           expect(node).to.be.undefined;
           done();
@@ -188,7 +172,7 @@ describe('Tree', function() {
 
     describe('depthFirst', function() {
       it('returns an error if query is malformed', function(done) {
-        t.depthFirst(t.tree.root, 'adfadf', 5, function(err, node) {
+        t.depthFirst(t.tree, 'adfadf', 5, function(err, node) {
           expect(err).to.eql(new Error('Query must be of the form { key: value[, key2: value2, etc.] }'));
           done();
         });
@@ -197,17 +181,17 @@ describe('Tree', function() {
 
     describe('flatten', function() {
       it('flattens a tree', function(done) {
-        t.flatten(t.tree.root);
-        expect(t.flattenedTree).to.eql(require('./flat_tree.json'));
+        t.flatten(t.tree);
+        expect(t.flattened).to.eql(require('./flat_tree.json'));
         done();
       });
     });
 
     describe('rebuild', function() {
       it('rebuilds a tree from a flat object', function(done) {
-        t.flattenedTree = require('./flat_tree.json');
+        t.flattened = require('./flat_tree.json');
         t.rebuild(t.getNode("1"), { id: 1 });
-        expect(t.tree).to.eql(require('./test.json').root);
+        expect(t.tree).to.eql(require('./test.json'));
         done();
       });
     });
@@ -234,7 +218,7 @@ describe('Tree', function() {
         it('returns the traversal path if requested', function(done) {
           var _rememberPath = t.options.rememberPath;
           t.options.rememberPath = true;
-          t.breadthFirst(t.tree.root, { id: 3 }, function(err, node, path) {
+          t.breadthFirst(t.tree, { id: 3 }, function(err, node, path) {
             expect(path.length).to.equal(3);
             expect(path).to.eql([
               {
@@ -310,7 +294,7 @@ describe('Tree', function() {
 
     describe('breadthFirst', function() {
       it('finds the right node with custom children', function(done) {
-        t.breadthFirst(t.tree.root, { id: 3 }, function(err, node) {
+        t.breadthFirst(t.tree, { id: 3 }, function(err, node) {
           expect(err).to.not.exist;
           expect(node).to.eql({
             "some": "property",
@@ -330,7 +314,7 @@ describe('Tree', function() {
 
     describe('depthFirst', function() {
       it('finds the right node with custom children', function(done) {
-        t.depthFirst(t.tree.root, { id: 3 }, 3, function(err, node) {
+        t.depthFirst(t.tree, { id: 3 }, 3, function(err, node) {
           expect(err).to.not.exist;
           expect(node).to.eql({
             "some": "property",
@@ -348,7 +332,7 @@ describe('Tree', function() {
       });
 
       it('works even with undefined depth', function(done) {
-        t.depthFirst(t.tree.root, { id: 3 }, 3, function(err, node) {
+        t.depthFirst(t.tree, { id: 3 }, 3, function(err, node) {
           expect(err).to.not.exist;
           expect(node).to.eql({
             "some": "property",
@@ -366,7 +350,7 @@ describe('Tree', function() {
       });
 
       it('returns undefined if it reaches max depth without finding a node', function(done) {
-        t.depthFirst(t.tree.root, { id: 4 }, 1, [], function(err, node) {
+        t.depthFirst(t.tree, { id: 4 }, 1, [], function(err, node) {
           expect(err).to.not.exist;
           expect(node).to.be.undefined;
           done();

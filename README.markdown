@@ -11,25 +11,23 @@ API
 Suppose you have a tree:
 ```javascript
 var someTree = {
-  root: {
-    name: 'Jake',
-    id: 1,
-    children: { // by default, Lumberjack looks for a 'children' property;
-                // you can override this in the options hash
-      b: {
-        name: 'Todd',
-        id: 2,
-        children: {
-          c: { 
-            name: 'Mary',
-            id: 3
-          }
+  name: 'Jake',
+  id: 1,
+  children: { // by default, Lumberjack looks for a 'children' property;
+              // you can override this in the options hash
+    b: {
+      name: 'Todd',
+      id: 2,
+      children: {
+        c: { 
+          name: 'Mary',
+          id: 3
         }
-      },
-      d: {
-        name: 'Tricia',
-        id: 4
       }
+    },
+    d: {
+      name: 'Tricia',
+      id: 4
     }
   }
 };
@@ -44,7 +42,7 @@ var tree = new Tree(someTree, /*options*/);
 You can search breadth-first:
 ```javascript
 // breadth-first search
-tree.breadthFirst(tree.tree.root, { id: 3 }, function(err, node) {
+tree.breadthFirst(tree.tree, { id: 3 }, function(err, node) {
   console.log(node); // { name: 'Mary', id: 3 }
 });
 ```
@@ -52,7 +50,7 @@ tree.breadthFirst(tree.tree.root, { id: 3 }, function(err, node) {
 or depth-first:
 ```javascript
 // depth-first search
-tree.depthFirst(tree.tree.root, { id: 4 }, function(err, node) {
+tree.depthFirst(tree.tree, { id: 4 }, function(err, node) {
   console.log(node); // { name: 'Tricia', id: 4 }
 });
 ```
@@ -60,7 +58,7 @@ tree.depthFirst(tree.tree.root, { id: 4 }, function(err, node) {
 You can flatten the tree:
 ```javascript
 // flatten
-tree.flatten(tree.tree.root);
+tree.flatten(tree.tree);
 console.log(tree.flattened); // { '1': 
                                        //    { name: 'Jake',
                                        //      id: 1,
@@ -99,14 +97,14 @@ console.log(tree.tree); // { name: 'Jake',
     ```javascript
     var tree = new Tree(someTree, { rememberPath: true });
 
-    tree.breadthFirst(tree.tree.root, { id: 3 }, function(err, node, path) {
+    tree.breadthFirst(tree.tree, { id: 3 }, function(err, node, path) {
       console.log(path); // [ { name: 'Jake', id: 1, children: { b: [Object], d: [Object] } },
                          //   { name: 'Todd', id: 2, children: { c: [Object] } },
                          //   { name: 'Tricia', id: 4 },
                          //   { name: 'Mary', id: 3 } ]
     });
 
-    tree.depthFirst(tree.tree.root, { id: 3 }, function(err, node, path) {
+    tree.depthFirst(tree.tree, { id: 3 }, function(err, node, path) {
       console.log(path); // [ { name: 'Jake', id: 1, children: { b: [Object], d: [Object] } },
                          //   { name: 'Todd', id: 2, children: { c: [Object] } },
                          //   { name: 'Mary', id: 3 } ]
