@@ -13,9 +13,9 @@ Suppose you have a tree:
 var someTree = {
   name: 'Jake',
   id: 1,
-  children: { // by default, Lumberjack looks for a 'children' property;
+  children: [ // by default, Lumberjack looks for a 'children' property;
               // you can override this in the options hash
-    b: {
+    {
       name: 'Todd',
       id: 2,
       children: {
@@ -25,11 +25,11 @@ var someTree = {
         }
       }
     },
-    d: {
+    {
       name: 'Tricia',
       id: 4
     }
-  }
+  ]
 };
 ```
 
@@ -59,16 +59,17 @@ You can flatten the tree:
 ```javascript
 // flatten
 tree.flatten(tree.tree);
-console.log(tree.flattened);           // { '1': 
-                                       //    { name: 'Jake',
-                                       //      id: 1,
-                                       //      children: [ 2, 4 ] },
-                                       //   '2': 
-                                       //    { name: 'Todd',
-                                       //      id: 2,
-                                       //      children: [ 3 ] },
-                                       //   '3': { name: 'Mary', id: 3, children: [] },
-                                       //   '4': { name: 'Tricia', id: 4, children: [] } }
+console.log(tree.flattened); // { '1': 
+                             //    { name: 'Jake',
+                             //      id: 1,
+                             //      children: [ 2, 4 ] },
+                             //   '2': 
+                             //    { name: 'Todd',
+                             //      id: 2,
+                             //      children: [ 3 ] },
+                             //   '3': { name: 'Mary', id: 3, children: [] },
+                             //   '4': { name: 'Tricia', id: 4, children: [] } 
+                             // }
 ```
 
 And you can rebuild it:
@@ -78,10 +79,14 @@ tree.rebuild(tree.flattened['1'], { id: 1 });
 console.log(tree.tree);       // { name: 'Jake',
                               //   id: 1,
                               //   children: 
-                              //   [ { name: 'Todd',
+                              //   [ { 
+                              //       name: 'Todd',
                               //       id: 2,
-                              //       children: [ { name: 'Mary', id: 3, children: [] } ] },
-                              //     { name: 'Tricia', id: 4, children: [] } ] }
+                              //       children: [ { name: 'Mary', id: 3, children: [] } ] 
+                              //     },
+                              //     { name: 'Tricia', id: 4, children: [] } 
+                              //   ] 
+                              // }
 ```
 
 #### Options
@@ -187,7 +192,9 @@ lumberjack.compare(tree1, tree2, { id: 1 }, function(err, markedTree) {
                             //        ], 
                             //        parent: 1 
                             //      },
-                            //      { name: 'Tricia', id: 4, parent: 1, removed: true } ] }
+                            //      { name: 'Tricia', id: 4, parent: 1, removed: true } 
+                            //    ] 
+                            //  }
 });
 
 ```
