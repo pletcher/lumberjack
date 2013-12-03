@@ -190,12 +190,12 @@ lumberjack.compare(tree1, tree2, { id: 1 }, function(err, markedTree) {
                             //          {
                             //            name: 'Bill',
                             //            id: 5,
-                            //            <b>added: true</b>
+                            //            added: true
                             //          }
                             //        ], 
                             //        parent: 1 
                             //      },
-                            //      { name: 'Tricia', id: 4, parent: 1, <b>removed: true</b> } 
+                            //      { name: 'Tricia', id: 4, parent: 1, removed: true } 
                             //    ] 
                             //  }
 });
