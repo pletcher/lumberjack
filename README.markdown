@@ -50,7 +50,7 @@ tree.breadthFirst(tree.tree, { name: 'Mary' }, function(err, node) {
 or depth-first:
 ```javascript
 // depth-first search
-tree.depthFirst(tree.tree, { id: 4 }, function(err, node) {
+tree.depthFirst(tree.tree, { id: 4 }, 3 /*max depth*/, function(err, node) {
   console.log(node); // { name: 'Tricia', id: 4 }
 });
 ```
