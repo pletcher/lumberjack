@@ -59,7 +59,8 @@ You can flatten the tree:
 ```javascript
 // flatten
 tree.flatten(tree.tree);
-console.log(tree.flattened); // { '1': 
+console.log(tree.flattened); // { 
+                             //   '1': 
                              //    { name: 'Jake',
                              //      id: 1,
                              //      children: [ 2, 4 ] },
@@ -76,7 +77,8 @@ And you can rebuild it:
 ```javascript
 // rebuild
 tree.rebuild(tree.flattened['1'], { id: 1 });
-console.log(tree.tree);       // { name: 'Jake',
+console.log(tree.tree);       // { 
+                              //   name: 'Jake',
                               //   id: 1,
                               //   children: 
                               //   [ { 
@@ -173,7 +175,8 @@ var lumberjack = new Lumberjack(/*options*/);
 lumberjack.compare(tree1, tree2, { id: 1 }, function(err, markedTree) {
   // `added` and `removed` properties are with respect to the first tree parameter passed to
   // the `compare` function.
-  console.log(markedTree);  //  { name: 'Jake',
+  console.log(markedTree);  //  { 
+                            //    name: 'Jake',
                             //    id: 1,
                             //    children: [ 
                             //      { 
