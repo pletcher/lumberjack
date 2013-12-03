@@ -1,12 +1,12 @@
 Lumberjack
 ===
 
-### A library for working with trees.
+##### A library for working with trees.
 
 API
 ---
 
-#### General Usage
+### Tree
 
 Suppose you have a tree:
 ```javascript
@@ -35,7 +35,7 @@ var someTree = {
 
 And suppose you need to find something in that tree:
 ```javascript
-var Tree = require('lumberjack-tree').tree;
+var Tree = require('lumberjack-tree').Tree;
 var tree = new Tree(someTree, /*options*/);
 ```
 
@@ -111,8 +111,86 @@ console.log(tree.tree); // { name: 'Jake',
     })
     ```
 
+### Lumberjack
 
-Additional functionality, including graph comparison, is planned.
+Lumberjack can compare two trees:
+
+```javascript
+var Tree = require('./index').Tree;
+var Lumberjack = require('./index').Lumberjack;
+
+var someTree = {
+  name: 'Jake',
+  id: 1,
+  children: [
+    {
+      name: 'Todd',
+      id: 2,
+      children: [
+        { 
+          name: 'Mary',
+          id: 3
+        }
+      ]
+    },
+    {
+      name: 'Tricia',
+      id: 4
+    }
+  ]
+};
+
+var anotherTree = {
+  name: 'Jake',
+  id: 1,
+  children: [
+    {
+      name: 'Todd',
+      id: 2,
+      children: [
+        { 
+          name: 'Mary',
+          id: 3
+        },
+        {
+          name: 'Bill',
+          id: 5
+        }
+      ]
+    }
+  ]
+};
+
+var tree1 = new Tree(someTree);
+var tree2 = new Tree(anotherTree);
+var lumberjack = new Lumberjack(/*options*/);
+
+lumberjack.compare(tree1, tree2, { id: 1 }, function(err, markedTree) {
+  // `added` and `removed` properties are with respect to the first tree parameter passed to
+  // the `compare` function.
+  console.log(markedTree);  //  { name: 'Jake',
+                            //    id: 1,
+                            //    children: [ 
+                            //      { 
+                            //        name: 'Todd', 
+                            //        id: 2,
+                            //        children: [
+                            //          { 
+                            //            name: 'Mary',
+                            //            id: 3
+                            //          },
+                            //          {
+                            //            name: 'Bill',
+                            //            id: 5,
+                            //            added: true
+                            //          }
+                            //        ], 
+                            //        parent: 1 
+                            //      },
+                            //      { name: 'Tricia', id: 4, parent: 1, removed: true } ] }
+});
+
+```
 
 Tests
 ---
