@@ -1,7 +1,7 @@
 Lumberjack
 ===
 
-##### A library for working with trees.
+##### A simple utility for working with trees.
 
 API
 ---
