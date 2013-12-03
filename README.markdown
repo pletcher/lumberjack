@@ -42,7 +42,7 @@ var tree = new Tree(someTree, /*options*/);
 You can search breadth-first:
 ```javascript
 // breadth-first search
-tree.breadthFirst(tree.tree, { id: 3 }, function(err, node) {
+tree.breadthFirst(tree.tree, { name: 'Mary' }, function(err, node) {
   console.log(node); // { name: 'Mary', id: 3 }
 });
 ```
@@ -59,7 +59,7 @@ You can flatten the tree:
 ```javascript
 // flatten
 tree.flatten(tree.tree);
-console.log(tree.flattened); // { '1': 
+console.log(tree.flattened);           // { '1': 
                                        //    { name: 'Jake',
                                        //      id: 1,
                                        //      children: [ 2, 4 ] },
@@ -75,7 +75,7 @@ And you can rebuild it:
 ```javascript
 // rebuild
 tree.rebuild(tree.flattened['1'], { id: 1 });
-console.log(tree.tree); // { name: 'Jake',
+console.log(tree.tree);       // { name: 'Jake',
                               //   id: 1,
                               //   children: 
                               //   [ { name: 'Todd',
@@ -86,7 +86,7 @@ console.log(tree.tree); // { name: 'Jake',
 
 #### Options
 - `children` (String; default: `'children'`): The name of subnodes in your tree
-    - The value of this property can be an object with your own custom indeces or a JavaScript Array; Lumberjack doesn't care
+    - The value of this property should be an `Array`; however, if you flatten and then rebuild your tree, it will be made into an `Array` for you.
 
 - `flat` (Boolean; default: `false`): If you pass a flat tree to the Tree constructor, mark this flag as `true` so the constructor can build the nested tree for you. (It takes as root the 0th item in the Object or Array that it receives.)
 
