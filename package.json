@@ -17,13 +17,12 @@
   },
   "keywords": [
     "tree",
-    "trie",
     "graph",
     "bfs",
     "dfs"
   ],
   "author": "Charles Pletcher",
-  "license": "BSD",
+  "license": "MIT",
   "bugs": {
     "url": "https://github.com/Pletcher/Lumberjack/issues"
   },
