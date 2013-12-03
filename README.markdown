@@ -192,6 +192,10 @@ lumberjack.compare(tree1, tree2, { id: 1 }, function(err, markedTree) {
 
 ```
 
+TODO
+---
+1. Make `Tree.rebuild` properly asynchronous
+
 Tests
 ---
 

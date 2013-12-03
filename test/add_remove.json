@@ -6,7 +6,7 @@
     "things"
   ],
   "id": 1,
-  "kids": [
+  "children": [
     {
       "some": "property",
       "another": [
@@ -16,11 +16,7 @@
         "things"
       ],
       "id": 2,
-      "kids": [
-        {
-          "some": "property"
-        }
-      ]
+      "children": []
     },
     {
       "some": "property",
@@ -31,7 +27,8 @@
         "more",
         "things"
       ],
-      "id": 3
+      "id": 3,
+      "children": []
     }
   ]
 }

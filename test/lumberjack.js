@@ -15,14 +15,13 @@ describe('Lumberjack', function() {
     l = t1 = t2 = null;
   });
 
-  it('creates a new instance even when called without new', function(done) {
+  it('creates a new instance even when called without new', function() {
     var l = Lumberjack();
     expect(l).to.be.instanceof(Lumberjack);
-    done();
   });
 
   describe('removals', function() {
-    it('compares two trees and determines removals w/r/t the first tree', function(done) {
+    it('compares two trees and determines removals w/r/t the first tree', function() {
       var removals = l.removals(t1, t2);
       expect(removals.count).to.equal(1);
       expect(removals.removed).to.eql({ 
@@ -33,12 +32,11 @@ describe('Lumberjack', function() {
           children: [] 
         }
       });
-      done();
     });
   });
 
   describe('additions', function() {
-    it('compares two trees and determines additions w/r/t the first tree', function(done) {
+    it('compares two trees and determines additions w/r/t the first tree', function() {
       var additions = l.additions(t1, t2);
       expect(additions.count).to.equal(1);
       expect(additions.added).to.eql({ 
@@ -56,7 +54,6 @@ describe('Lumberjack', function() {
           children: [] 
         }
       });
-      done();
     });
   });
 
