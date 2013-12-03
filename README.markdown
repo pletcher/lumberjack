@@ -116,8 +116,8 @@ console.log(tree.tree);       // { name: 'Jake',
 Lumberjack can compare two trees:
 
 ```javascript
-var Tree = require('./index').Tree;
-var Lumberjack = require('./index').Lumberjack;
+var Tree = require('lumberjack-tree').Tree;
+var Lumberjack = require('lumberjack-tree').Lumberjack;
 
 var someTree = {
   name: 'Jake',
