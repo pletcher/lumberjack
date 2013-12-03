@@ -173,7 +173,7 @@ var tree2 = new Tree(anotherTree);
 var lumberjack = new Lumberjack(/*options*/);
 
 lumberjack.compare(tree1, tree2, { id: 1 }, function(err, markedTree) {
-  // `added` and `removed` properties are with respect to the first tree parameter passed to
+  // `added` and `removed` properties are with respect to the first Tree passed to
   // the `compare` function.
   console.log(markedTree);  //  { 
                             //    name: 'Jake',
@@ -190,12 +190,12 @@ lumberjack.compare(tree1, tree2, { id: 1 }, function(err, markedTree) {
                             //          {
                             //            name: 'Bill',
                             //            id: 5,
-                            //            added: true
+                            //            <b>added: true</b>
                             //          }
                             //        ], 
                             //        parent: 1 
                             //      },
-                            //      { name: 'Tricia', id: 4, parent: 1, removed: true } 
+                            //      { name: 'Tricia', id: 4, parent: 1, <b>removed: true</b> } 
                             //    ] 
                             //  }
 });
