@@ -99,7 +99,7 @@ console.log(tree.tree);       // {
 
 - `identifier` (String; default: `'id'`): The key that uniquely identifies each node in your tree
 
-- `rememberPath` (Boolean; default: `false`): Instructs the Lumberjack instance to return its traversal path for your search. If true, provider your callback with a third parameter:
+- `rememberPath` (Boolean; default: `false`): Instructs the Lumberjack instance to return its traversal path for your search. If true, provide your callback with a third parameter:
 
     ```javascript
     var tree = new Tree(someTree, { rememberPath: true });
@@ -205,6 +205,7 @@ lumberjack.compare(tree1, tree2, { id: 1 }, function(err, markedTree) {
 TODO
 ---
 1. Make `Tree.rebuild` properly asynchronous
+2. Make `Tree.depthFirst` properly asynchronous
 
 Tests
 ---

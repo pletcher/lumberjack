@@ -8,7 +8,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git@github.com:Pletcher/Lumberjack.git"
+    "url": "git@github.com:Pletcher/lumberjack.git"
   },
   "devDependencies": {
     "mocha": "1.14.x",
@@ -24,7 +24,7 @@
   "author": "Charles Pletcher",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/Pletcher/Lumberjack/issues"
+    "url": "https://github.com/Pletcher/lumberjack/issues"
   },
   "dependencies": {
     "underscore": "1.5.2",
